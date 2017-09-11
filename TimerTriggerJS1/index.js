@@ -8,4 +8,6 @@ module.exports = function (context, myTimer) {
     context.log('JavaScript timer trigger function ran!', timeStamp);   
     
     context.done();
+
+    //change this line for demo purposes
 };
