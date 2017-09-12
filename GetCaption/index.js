@@ -3,8 +3,8 @@ request = require('request')
 module.exports = function (context, req) {
     context.log('JavaScript HTTP trigger function processed a request.');
 
-    if (req.query.name || (req.body && req.body.name)) {
-        var url = req.body.name;
+    if (req.query.imageURL || (req.body && req.body.imageURL)) {
+        var url = req.body.imageURL;
         requestBody = JSON.stringify({"url":url})
         request.post({
             headers: {'content-type':'application/json', 'Ocp-Apim-Subscription-Key':process.env.APIKEY},
@@ -20,15 +20,15 @@ module.exports = function (context, req) {
                 // status: 200, /* Defaults to 200 */
                     body: result
                 };
+                context.done();
             }
         });
-
     }
     else {
         context.res = {
             status: 400,
             body: "Please pass an imageURL on the query string or in the request body"
         };
+        context.done();
     }
-    context.done();
 };
