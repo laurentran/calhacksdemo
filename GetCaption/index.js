@@ -22,7 +22,7 @@ const postContent = function(url, context) {
     var postData = JSON.stringify({'url': url});
 
     var options = {
-        hostname: 'westus.api.cognitive.microsoft.com',
+        hostname: 'westcentralus.api.cognitive.microsoft.com',
         port: 443,
         path: '/vision/v1.0/describe',
         method: 'POST',
