@@ -39,7 +39,7 @@ function getCaption(context, imageUrl, outputData) {
         method: 'POST',
         headers: {
             'content-type': 'application/json',
-            'Ocp-Apim-Subscription-Key':'5c752cdeac9d4a3cbbce41504780fb8a' 
+            'Ocp-Apim-Subscription-Key': process.env.API_KEY 
         },
         body: requestBody,
         context: context
