@@ -35,11 +35,11 @@ module.exports = function (context, req) {
 function getCaption(context, imageUrl, outputData) {
     var requestBody = JSON.stringify({"url":imageUrl});
     var params = {
-        url: 'https://westcentralus.api.cognitive.microsoft.com/vision/v1.0/describe',
+        url: 'https://westcentralus.api.cognitive.microsoft.com/vision/v1.0/analyze?visualFeatures=Adult,Description&language=en',
         method: 'POST',
         headers: {
             'content-type': 'application/json',
-            'Ocp-Apim-Subscription-Key': process.env.API_KEY 
+            'Ocp-Apim-Subscription-Key':process.env.API_KEY 
         },
         body: requestBody,
         context: context
@@ -48,10 +48,17 @@ function getCaption(context, imageUrl, outputData) {
     request(params, function(error, response, body) {
         if(!error) {
             context.log(JSON.parse(body));
-            var caption = JSON.parse(body).description.captions[0].text;
+            var result = JSON.parse(body);
+            var isAdult = result.adult.isAdultContent;
+            var isRacy = result.adult.isRacyContent;
+            var caption = result.description.captions[0].text;
             context.log(caption);
 
             // write to queue
+            if (isAdult || isRacy) {
+                outputData['imageURL'] = 'http://www.rockcellarmagazine.com/wp-content/uploads/2014/11/censored.jpg'
+                caption = 'NSFW!'
+            } 
             outputData['caption'] = caption;
             writeToQueue(params.context, outputData);
             //params.context.bindings.outputQueueItem = outputData;
