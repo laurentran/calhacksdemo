@@ -15,9 +15,14 @@ module.exports = function (context, req) {
 
     // check if incoming text has an image
     if(smsData.hasOwnProperty('MediaUrl0')) {
+        var outputData = {};
+        outputData['imageURL'] = smsData['MediaUrl0'];
+        outputData['phoneNumber'] = smsData['From'].substring(8,12);
+
         context.log("Getting caption");
         context.log(smsData['MediaUrl0']);
-        getCaption(context, smsData['MediaUrl0']);
+        getCaption(context, smsData['MediaUrl0'], outputData);
+        //context.done();
     }
 
     // respond asking for image
@@ -27,14 +32,14 @@ module.exports = function (context, req) {
     }
 };
 
-function getCaption(context, imageUrl) {
+function getCaption(context, imageUrl, outputData) {
     var requestBody = JSON.stringify({"url":imageUrl});
     var params = {
         url: 'https://westcentralus.api.cognitive.microsoft.com/vision/v1.0/describe',
         method: 'POST',
         headers: {
             'content-type': 'application/json',
-            'Ocp-Apim-Subscription-Key': process.env.API_KEY
+            'Ocp-Apim-Subscription-Key':'5c752cdeac9d4a3cbbce41504780fb8a' 
         },
         body: requestBody,
         context: context
@@ -42,13 +47,22 @@ function getCaption(context, imageUrl) {
     context.log("making request");
     request(params, function(error, response, body) {
         if(!error) {
+            context.log(JSON.parse(body));
             var caption = JSON.parse(body).description.captions[0].text;
             context.log(caption);
+
+            // write to queue
+            outputData['caption'] = caption;
+            writeToQueue(params.context, outputData);
+            //params.context.bindings.outputQueueItem = outputData;
+
+            // send sms 
             sendResponse(params.context, caption);
         } else {
             context.log("error");
         }
     });
+    //context.done();
 }
 
 function sendResponse(context, smsResponse) {
@@ -66,4 +80,10 @@ function sendResponse(context, smsResponse) {
         isRaw: true
     };
     context.done()
+}
+
+function writeToQueue(context, queueItem) {
+    context.log("writing to queue");
+    context.bindings.outputQueueItem = queueItem;
+    context.log("done");
 }
