@@ -37,7 +37,7 @@
 
 9. Navigate to [https://github.com/laurentran/calhacksdemo/blob/master/GetCaption/index.js](https://github.com/laurentran/calhacksdemo/blob/master/GetCaption/index.js), and replace your function code (index.js) with the provided sample code. 
 
-10. One line 25, if the **hostname** of your provided Cognitive Service Computer Vision API is different than the sample, update it. The **hostname** should be: `{location}.api.cognitive.microsoft.com`. 
+10. One line 25, if the **hostname** of your provided Cognitive Service Computer Vision API is different than the sample, update it. The **hostname** should be: `{location}.api.cognitive.microsoft.com`. Do NOT include `/vision/v1.0` in the hostname.
 
 11. On line 31, notice that the API key is stored as an environment variable: `process.env.API_KEY`. In the free version of Azure Function, we don't have access to storing environment variables, so we'll hard code in the API key. 
 
