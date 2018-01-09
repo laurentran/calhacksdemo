@@ -2,7 +2,7 @@
 
 ## Part 1: Create your Azure Function App
 
-1. Navigate to http://functions.azure.com, and click the green **“Try it Free”** button.
+1. Navigate to https://functions.azure.com/try (free trial environmnet).
 
 2. We’ll create an HTTP triggered function with JavaScript.  On the screen below, select **Webhook + API** for the scenario, and choose **JavaScript** for the language.  Click **“Create this Function”**
 
